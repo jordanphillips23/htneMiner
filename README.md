@@ -6,13 +6,13 @@
 3. run make
 4. run make install ..
 
-That will install the library into your outer directory
+  That will install the library into your outer directory
 
 5. navigate out one level (cd ..)
 6. run make
 
-This should build the executable
-
+  This should build the executable
+ 
 7. ./main
 
-This will bootup the program and run the executable
+  This will bootup the program and run the executable
