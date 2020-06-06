@@ -1,8 +1,10 @@
 #include <std>
 #include <string>
+#include <ctime>
 
 #include "transaction.hh"
 #include "block.hh"
+
 
 class Blockchain
 {
@@ -33,3 +35,7 @@ public:
 
 
 }
+
+bool startsWith0s(int diff, string s);
+
+string currTime();
