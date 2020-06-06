@@ -1,6 +1,6 @@
-## htneMiner
+# htneMiner
 
-# to install
+## to install
 1. download into a repository
 2. navigate into the cryptopp824 folder in a terminal or command prompt
 3. run make
