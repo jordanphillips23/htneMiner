@@ -1,6 +1,6 @@
 #include "block.hh"
 
-Block::Block(int index, std::vector<Transaction> transactions, string timestamp, string previous_hash, int nonce)) {
+Block::Block(int index, std::vector<Transaction> transactions, string timestamp, string previous_hash, int nonce) {
   this->index = index;
   this->transactions = transactions;
   this->timestamp = timestamp;
@@ -9,30 +9,41 @@ Block::Block(int index, std::vector<Transaction> transactions, string timestamp,
 }
 
 string Block::compute_hash() {
-  SHA3_256 currHash;
+  // creates the Hasher
+  CryptoPP::SHA3_256 currHash;
+
+  // stores the json as a string
   string msg = toJson();
   string digest;
 
-  currHash.Update((const byte*)msg.data(), msg.size());
-  digest.resize(hash.DigestSize());
-  currHash.Final((byte*)&digest[0]);
+  // prepares the hasher
+  currHash.Update((const CryptoPP::byte*)msg.data(), msg.size());
 
-  hash = digest;
-  
+  // resizes the output to fit the hash
+  digest.resize(currHash.DigestSize());
+
+  // stores the resulting hash into digest
+  currHash.Final((CryptoPP::byte*)&digest[0]);
+
   return digest;
 }
 
+// converts all the data into a json string
+
 string Block::toJson() {
     string json = "{";
-    json << "'index':" << index << ",";
-    json << "'transactions':["
-    for (Transaction transaction in transactions) {
-        json << transaction.toJson() << ","
+    std::stringstream indexStr;
+    indexStr << index;
+
+    json += "'index':" + indexStr.str() + ",";
+    json += "'transactions':[";
+    for (Transaction transaction : transactions) {
+        json += transaction.toJson() + ",";
     }
-    json << "],";
-    json << "'timestamp':'" << timestamp << "',";
-    json << "'previous_hash':'" << previous_hash << "',";
-    json << "'nonce':" << nonce << ',';
-    json << "}";
+    json += "],";
+    json += "'timestamp':'" + timestamp + "',";
+    json += "'previous_hash':'" + previous_hash + "',";
+    json += "'nonce':" + nonce + ',';
+    json += "}";
     return json;
 }

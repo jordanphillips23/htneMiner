@@ -1,12 +1,14 @@
-#include "blockchain.hh";
+#include "blockchain.hh"
 
 Blockchain::Blockchain() {
+  // starting difficulty
   difficulty = 2;
   unconfirmed_transactions = std::vector<Transaction>();
   chain = std::list<Block>();
 
+  // creates an empty starting block
   create_genesis_block();
-  last_block = chain.end();
+  last_block = chain.back();
 }
 
 void Blockchain::create_genesis_block() {
@@ -21,9 +23,14 @@ void Blockchain::create_genesis_block() {
   chain.push_back(genesis_block);
 }
 
+// creates the hash that proves that the inputs were valid
 string Blockchain::proof_of_work(Block block) {
+
   block.nonce = 0;
+
   string computed_hash = block.compute_hash();
+  // in essence has to run the hashfunction at least difficulty times
+  // this results in the true final hash
   while (!startsWith0s(difficulty, computed_hash)) {
     block.nonce++;
     computed_hash = block.compute_hash();
@@ -41,10 +48,13 @@ int Blockchain::mine() {
   if (unconfirmed_transactions.empty()) {
     return -1;
   }
-  new_block = Block(index = last_block.index + 1, unconfirmed_transactions, currTime(), last_block.hash);
+  // creates the new block
+  Block new_block = Block(last_block.index + 1, unconfirmed_transactions, currTime(), last_block.hash);
 
-  proof = proof_of_work(new_block);
+  // finds the hash for the new block
+  string proof = proof_of_work(new_block);
 
+  // adds that block to the chain
   add_block(new_block, proof);
 
   return new_block.index;
@@ -57,10 +67,12 @@ bool Blockchain::add_block(Block block, string proof) {
     return false;
   }
 
-  if (!is_valid_proof(block)) {
+  // verifies proof is valid
+  if (!is_valid_proof(block, proof)) {
     return false;
   }
 
+  // adds the block to the chain
   block.hash = proof;
   chain.push_back(block);
   last_block = block;
@@ -70,22 +82,24 @@ bool Blockchain::add_block(Block block, string proof) {
 }
 
 bool Blockchain::is_valid_proof(Block block, string hash) {
-  return startsWith0s(difficulty) && hash == block.compute_hash();
+  return startsWith0s(difficulty, hash) && hash == block.compute_hash();
 }
 
-
+// checks if it starts with diff 0s
 bool startsWith0s(int diff, string s) {
+
   for (int i = 0; i < diff; i++) {
-    if (starts[i] != '0') {
+    if (s[i] != '0') {
       return false;
     }
   }
   return true;
 }
 
+// returns currentTime as a string
 string currTime() {
   time_t currentTime = time(NULL);
   string timestamp = "";
-  timestamp << currentTime;
+  timestamp += currentTime;
   return timestamp;
 }
