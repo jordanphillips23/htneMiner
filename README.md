@@ -18,7 +18,7 @@
   This will bootup the program and run the executable
   
 
-##Explanation
+## Explanation
 main.cpp contains a simple cli wrapper around the blockchain
 
 blockchain.cpp contains the methods for the blockchain object defined in blockchain.hh
