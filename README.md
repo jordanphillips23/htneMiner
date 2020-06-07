@@ -16,3 +16,13 @@
 7. ./main
 
   This will bootup the program and run the executable
+  
+
+## Explanation
+main.cpp contains a simple cli wrapper around the blockchain
+
+blockchain.cpp contains the methods for the blockchain object defined in blockchain.hh
+
+block.cpp contains the methods for the block object defined in block.hh
+
+Transaction.hh contains the objects that are stored in the transations
