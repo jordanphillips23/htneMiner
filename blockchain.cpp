@@ -1,3 +1,4 @@
+
 #include "blockchain.hh"
 
 Blockchain::Blockchain() {
@@ -24,7 +25,7 @@ void Blockchain::create_genesis_block() {
 }
 
 // creates the hash that proves that the inputs were valid
-string Blockchain::proof_of_work(Block block) {
+string Blockchain::proof_of_work(Block &block) {
 
   block.nonce = 0;
 
@@ -49,18 +50,19 @@ int Blockchain::mine() {
     return -1;
   }
   // creates the new block
-  Block new_block = Block(last_block.index + 1, unconfirmed_transactions, currTime(), last_block.hash);
 
+  Block new_block = Block(last_block.index + 1, unconfirmed_transactions, currTime(), last_block.hash);
   // finds the hash for the new block
   string proof = proof_of_work(new_block);
 
   // adds that block to the chain
   add_block(new_block, proof);
-
+  // empties the unconfirmed_transactions
+  unconfirmed_transactions.clear();
   return new_block.index;
 }
 
-bool Blockchain::add_block(Block block, string proof) {
+bool Blockchain::add_block(Block &block, string proof) {
   string previous_hash = last_block.hash;
 
   if (previous_hash != block.previous_hash) {
@@ -99,7 +101,20 @@ bool startsWith0s(int diff, string s) {
 // returns currentTime as a string
 string currTime() {
   time_t currentTime = time(NULL);
-  string timestamp = "";
-  timestamp += currentTime;
-  return timestamp;
+  std::stringstream timestamp;
+  timestamp << currentTime;
+  return timestamp.str();
+}
+
+string Blockchain::toJson() {
+  std::stringstream json;
+  json << "[";
+  for (Block block : chain) {
+    json << block.toJson();
+    if (block.index != last_block.index) {
+      json << ",";
+    }
+  }
+  json << "]";
+  return json.str();
 }

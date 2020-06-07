@@ -2,6 +2,7 @@
 #include <ctime>
 #include <vector>
 #include <list>
+#include <sstream>
 
 #include "transaction.hh"
 #include "block.hh"
@@ -25,10 +26,10 @@ public:
   void create_genesis_block();
 
   // returns the hash calculated for this block
-  string proof_of_work(Block block);
+  string proof_of_work(Block &block);
 
   // adds a block to the chain
-  bool add_block(Block block, string proof);
+  bool add_block(Block &block, string proof);
 
   // checks if the given proof is valid
   bool is_valid_proof(Block block, string hash);
@@ -38,6 +39,8 @@ public:
 
   // creates a new_block by solving the hash function
   int mine();
+
+  string toJson();
 
 
 };

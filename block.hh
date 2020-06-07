@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <iostream>
 
 #include "transaction.hh"
 
@@ -32,3 +33,5 @@ public:
   // converts this object to string Json format
   string toJson();
 };
+
+string hexToString(string s);
